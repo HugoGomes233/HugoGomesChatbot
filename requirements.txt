@@ -1,6 +1,7 @@
 streamlit
 langchain
 langchain-community
+azure-ai-openai
 python-dotenv
 chromadb
 openai
