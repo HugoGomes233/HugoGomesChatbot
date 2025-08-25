@@ -5,7 +5,10 @@ from langchain_community.vectorstores import Chroma
 from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.retrieval_qa.base import RetrievalQA
+from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
+from datetime import datetime
+
 
 # Load .env 
 load_dotenv()
@@ -13,6 +16,8 @@ load_dotenv()
 #Curricullum Path
 PDF_PATH = os.path.join("data", "my_curricullum.pdf")
 
+#Get Current Year
+current_date = datetime.now()
 # Load and split PDF
 def load_pdf(path):
     loader = PyMuPDFLoader(path)
@@ -45,8 +50,34 @@ def create_qa_chain(vectorstore):
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         api_version="2024-12-01-preview"
     )
-    return RetrievalQA.from_chain_type(llm=llm, retriever=retriever, chain_type="stuff")
+    
+    # Prompt in first person with context
+    template = f"""
+        I am Hugo Gomes and I will answer in the first person.
+        Use only information from my resume to aswner the question but be kind when there are no questions, remember that we are in the year {current_date}.
+        If the question is ambiguous (e.g., "where are you from?"), assume it refers to me.
+        If you cannot find the answer in the documents, respond:
+        "I could not find this information in my resume."
 
+        Documents: {{context}}
+
+        Question: {{question}}
+        Answer:
+        """
+
+    prompt = PromptTemplate(
+        template=template,
+        input_variables=["context", "question"]
+    )
+
+    return RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=retriever,
+        chain_type="stuff",
+        chain_type_kwargs={"prompt": prompt, "document_variable_name": "context"}
+    )
+
+    
 # --- Streamlit UI ---
 st.set_page_config(page_title="📄 Hugo Gomes Chatbot", page_icon="🤖", layout="wide")
 st.title("🤖 Hugo Gomes Chatbot")
@@ -59,7 +90,11 @@ if "qa_chain" not in st.session_state:
         docs = load_pdf(PDF_PATH)
         vectorstore = create_vectorstore(docs)
         st.session_state.qa_chain = create_qa_chain(vectorstore)
-    st.success("✅ Bot Loaded! You can start 👇")
+    if len(st.session_state.messages) == 0:
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": "Hello! I am Hugo Gomes, what do you want to know about me?"
+        })
 
 # Render Chat History
 for msg in st.session_state.messages:
