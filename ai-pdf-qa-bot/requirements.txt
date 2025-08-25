@@ -1,7 +1,0 @@
-streamlit
-langchain
-langchain-community
-python-dotenv
-chromadb
-openai
-pymupdf
