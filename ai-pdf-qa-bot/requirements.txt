@@ -1,5 +1,7 @@
+streamlit
 langchain
-faiss-cpu
-pypdf
-openai
+langchain-community
 python-dotenv
+chromadb
+openai
+pymupdf

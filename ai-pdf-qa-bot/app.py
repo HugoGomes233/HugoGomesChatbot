@@ -1,82 +1,84 @@
 import os
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_community.vectorstores import FAISS
-from langchain_openai import AzureOpenAIEmbeddings
+import streamlit as st
+from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_community.vectorstores import Chroma
+from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.retrieval_qa.base import RetrievalQA
-from langchain_openai import AzureChatOpenAI
 from dotenv import load_dotenv
 
 # Load .env 
 load_dotenv()
 
-# Load and split PDF into chunks
-def load_pdf(path):
-    loader = PyPDFLoader(path)
-    documents = loader.load()
+#Curricullum Path
+PDF_PATH = os.path.join("data", "my_curricullum.pdf")
 
-    text_splitter = RecursiveCharacterTextSplitter(
+# Load and split PDF
+def load_pdf(path):
+    loader = PyMuPDFLoader(path)
+    documents = loader.load()
+    splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=200
     )
-    return text_splitter.split_documents(documents)
+    return splitter.split_documents(documents)
 
-# Create Vectorial Base FAISS with embeddings
+# Create Vectorstore
 def create_vectorstore(docs):
     embeddings = AzureOpenAIEmbeddings(
         azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
-        model="text-embedding-3-large", 
+        model="text-embedding-3-large",
         api_key=os.getenv("AZURE_OPENAI_API_KEY"),
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         api_version="2024-12-01-preview"
     )
-    return FAISS.from_documents(docs, embeddings)
+    return Chroma.from_documents(docs, embeddings)
 
-# Create the QA Chain of Questions and Answers
+# Create QA Chain
 def create_qa_chain(vectorstore):
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})  
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
     llm = AzureChatOpenAI(
-        deployment_name=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),  
+        deployment_name=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
         model="gpt-4o",
         temperature=0,
         api_key=os.getenv("AZURE_OPENAI_API_KEY"),
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         api_version="2024-12-01-preview"
     )
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        retriever=retriever,
-        chain_type="stuff" 
-    )
-    return qa_chain
+    return RetrievalQA.from_chain_type(llm=llm, retriever=retriever, chain_type="stuff")
 
-if __name__ == "__main__":
-    while True:
-        pdf_path = input("Enter the PDF full path that you want to create a QA bot: ").strip()
-    
-        # Check if the file exists
-        if os.path.isfile(pdf_path):
-            print(f"Found file: {pdf_path}")
-            break  
-        else:
-            print(f"File not found at '{pdf_path}'. Please try again.\n")
+# --- Streamlit UI ---
+st.set_page_config(page_title="📄 Hugo Gomes Chatbot", page_icon="🤖", layout="wide")
+st.title("🤖 Hugo Gomes Chatbot")
 
-    print(f"Loading PDF {pdf_path}...")
+# Save state of the chat
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+if "qa_chain" not in st.session_state:
+    with st.spinner("Loading Hugo Gomes Question Bot..."):
+        docs = load_pdf(PDF_PATH)
+        vectorstore = create_vectorstore(docs)
+        st.session_state.qa_chain = create_qa_chain(vectorstore)
+    st.success("✅ Bot Loaded! You can start 👇")
 
-    # 1. Load PDF
-    docs = load_pdf(pdf_path)
+# Render Chat History
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
-    # 2. Create Vectorial Base
-    vectorstore = create_vectorstore(docs)
+# Chat
+if query := st.chat_input("Write your question..."):
+    # Save User Question
+    st.session_state.messages.append({"role": "user", "content": query})
+    with st.chat_message("user"):
+        st.markdown(query)
 
-    # 3. Create Chain
-    qa_chain = create_qa_chain(vectorstore)
+    if st.session_state.qa_chain:
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                answer = st.session_state.qa_chain.invoke(query)
+                response = answer["result"]
+                st.markdown(response)
 
-    print("\nAsk me something about the pdf (write exit or quit to leave)\n")
-
-    while True:
-        query = input("Question: ")
-        if query.lower() in ["exit", "quit"]:
-            break
-        answer = qa_chain.invoke(query)
-        print(f"Answer: {answer['result']}\n")
+        # Save AI Answer
+        st.session_state.messages.append({"role": "assistant", "content": response})
