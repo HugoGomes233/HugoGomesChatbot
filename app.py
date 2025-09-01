@@ -23,8 +23,8 @@ def load_pdf(path):
     loader = PyMuPDFLoader(path)
     documents = loader.load()
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200
+        chunk_size=400,
+        chunk_overlap=50
     )
     return splitter.split_documents(documents)
 
