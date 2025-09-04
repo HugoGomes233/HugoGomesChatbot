@@ -54,7 +54,7 @@ Vector Store → Converts chunks to embeddings and stores them in ChromaDB.
 
 QA Chain → Uses RetrievalQA with AzureChatOpenAI to generate answers.
 
-Chat Loop → Streamlit frontend or Ragas test scripts query the QA chain.
+Chat Loop → Streamlit frontend
 
 📌 Notes
 
