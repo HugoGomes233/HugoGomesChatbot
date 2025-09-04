@@ -1,21 +1,21 @@
  📄 PDF Q&A Chatbot
 
 
-Interactive chatbot that answers questions about any PDF using Azure OpenAI, LangChain, and FAISS.
+Interactive chatbot that answers questions about any PDF using Azure OpenAI, LangChain, and ChromaDB.
 
 ⚡ Features
 
-   Load and process any PDF file.
-   
-   Split PDF into chunks for efficient retrieval.
-   
-   Generate embeddings with Azure OpenAI (text-embedding-3-large).
-   
-   Store embeddings in FAISS vector database.
-   
-   Retrieval-based QA with AzureChatOpenAI.
-   
-   Terminal-based interactive chatbot.
+Load and process any PDF file.
+
+Split PDF into chunks for efficient retrieval.
+
+Generate embeddings with Azure OpenAI (text-embedding-3-large).
+
+Store embeddings in Chroma vector database.
+
+Retrieval-based QA with AzureChatOpenAI.
+
+Streamlit-based interactive chatbot UI.
 
 🚀 Installation
 
@@ -28,30 +28,38 @@ AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=<your-chat-deployment-name>
 
 💻 Usage
 
-Run the chatbot:
+Run the Streamlit interface
+streamlit run bot_ui.py
 
-  python app.py
-  
-  Enter the full path of the PDF.
-  
-  Ask questions about its content.
-  
-  Type exit or quit to stop.
+
+Enter the full path of the PDF.
+
+Ask questions interactively.
+
+Streamlit handles the interface and calls the core QA engine.
+
+2. Run Ragas tests (optional)
+python -m ragas_tests.bot_ragas
+
+
+Evaluates the bot against predefined queries in ragas_dataset.py.
+
+Returns metrics or compares answers with expected responses.
 
 🧠 How It Works
 
-  Load PDF – Split PDF text into chunks.
-  
-  Vector Store – Convert chunks to embeddings and store in FAISS.
-  
-  QA Chain – Use RetrievalQA with AzureChatOpenAI for answers.
-  
-  Chat Loop – Continuously interact with the PDF until exit.
+Load PDF → Splits PDF text into chunks.
+
+Vector Store → Converts chunks to embeddings and stores them in ChromaDB.
+
+QA Chain → Uses RetrievalQA with AzureChatOpenAI to generate answers.
+
+Chat Loop → Streamlit frontend or Ragas test scripts query the QA chain.
 
 📌 Notes
 
-  PDFs must be text-based (not scanned images).
-  
-  Adjust chunk_size and chunk_overlap in RecursiveCharacterTextSplitter for performance tuning.
-  
-  Retrieval-based answers depend on the stored chunks.
+PDFs must be text-based (not scanned images).
+
+Adjust chunk_size and chunk_overlap in CharacterTextSplitter for performance tuning.
+
+Retrieval-based answers depend on the stored chunks.
