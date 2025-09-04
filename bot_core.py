@@ -2,7 +2,7 @@ import os
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
@@ -20,11 +20,11 @@ current_date = datetime.now()
 def load_pdf():
     loader = PyMuPDFLoader(PDF_PATH)
     documents = loader.load()
-    splitter = CharacterTextSplitter(
-        separator="\n\n",
-        chunk_size=800,
-        chunk_overlap=0
-    )
+    splitter = RecursiveCharacterTextSplitter(
+    chunk_size=800,
+    chunk_overlap=200,
+    separators=["\n\n", "\n", " ", ""]
+)
     return splitter.split_documents(documents)
 
 # Create Vectorstore
@@ -48,7 +48,6 @@ def create_qa_chain(vectorstore):
         api_key=os.getenv("AZURE_OPENAI_API_KEY"),
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         api_version="2024-12-01-preview",
-        timeout = 50000
     )
 
     # Prompt in first person with context
