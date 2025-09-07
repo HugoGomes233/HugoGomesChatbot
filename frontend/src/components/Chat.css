@@ -1,0 +1,130 @@
+.chat-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f2f5;
+  box-sizing: border-box;
+}
+
+/* Header bar */
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ccc;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.chat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.chat-name {
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.chat-status {
+  margin-left: 10px;
+  color: green;
+}
+
+.chat-close-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+}
+
+/* Messages container */
+.chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Message rows */
+.chat-message-row {
+  display: flex;
+  align-items: flex-end;
+  margin: 5px 0;
+}
+
+.chat-message-row.user {
+  justify-content: flex-end;
+}
+
+.chat-message-row.bot {
+  justify-content: flex-start;
+}
+
+/* Message bubbles */
+.chat-bubble {
+  padding: 10px 15px;
+  border-radius: 20px;
+  max-width: 70%;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+.chat-bubble.user {
+  background-color: #0084ff;
+  color: white;
+  margin-right: 10px;
+}
+
+.chat-bubble.bot {
+  background-color: #e4e6eb;
+  color: black;
+  margin-left: 10px;
+}
+
+/* Input area */
+.chat-input-area {
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.chat-send-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: #0084ff;
+  color: white;
+  border: none;
+}
+
+.chat-send-btn:disabled {
+  background-color: #a0c8ff;
+  cursor: not-allowed;
+}
+.typing-indicator {
+  font-size: 14px;
+  color: #555;
+  padding: 5px 10px;
+  font-style: italic;
+}
+

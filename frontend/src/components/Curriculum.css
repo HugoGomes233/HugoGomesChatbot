@@ -1,0 +1,182 @@
+/* Base layout */
+h3 {
+  text-align: center;
+}
+
+/* Base layout */
+.cv-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  border: 1px solid #e3e3e3;
+  background: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #222;
+}
+
+/* Sidebar */
+.cv-sidebar {
+  background: #B9CDE5;
+  border-right: 1px solid #e3e3e3;
+  padding: 22px;
+}
+
+.sidebar-section + .sidebar-section {
+  margin-top: 28px;
+}
+
+.cv-sidebar h2 {
+  font-size: 1.05rem;
+  margin: 0 0 10px 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid black;
+}
+
+.sidebar-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    transition: transform 0.2s;
+}
+
+.sidebar-icon:hover {
+    transform: scale(1.1);
+}
+
+
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 14px auto;
+  object-fit: cover;
+}
+
+.personal-data {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.personal-data li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 4px;
+  margin: 20px 0;
+
+}
+
+.personal-data li span:first-child {
+  color: #444;
+  font-weight: 600;
+}
+
+.sidebar-links {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.bulleted {
+  margin: 0;
+  padding-left: 18px;
+}
+.bulleted li { margin: 6px 0; }
+.bulleted em { color: #666; font-style: normal; }
+
+/* Main content */
+.cv-main { padding: 30px; }
+
+.cv-header { margin-bottom: 24px; }
+.cv-header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+.cv-header .subtitle {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+/* Sections */
+section { margin: 26px 0; }
+section h2 {
+  font-size: 1.25rem;
+  border-bottom: 2px solid black;
+  padding-bottom: 6px;
+  margin: 0 0 12px 0;
+}
+
+/* Jobs */
+.job { margin: 18px 0 26px 0; }
+.job-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+.job h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.date { color: #666; font-size: 0.95rem; }
+
+.assignment { margin-top: 14px; margin-left: 30px; }
+.assignment h4 { margin: 0 0 6px 0; font-size: 1rem; }
+.dim { color: #666; font-weight: normal; }
+.muted { color: #666; margin: 6px 0; }
+
+.tech { margin: 8px 0 0 0; }
+.tech span { font-weight: 700; }
+
+/* Education */
+.edu-title { margin: 0; }
+.edu .date { margin-top: 4px; }
+
+/* Skills */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 24px;
+}
+.skill-block h4 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+}
+.skill-block p {
+  margin: 0;
+  color: #333;
+}
+
+/* Anchors */
+a { color: #0a66c2; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cv-layout {
+    grid-template-columns: 1fr;
+  }
+  .cv-sidebar {
+    border-right: none;
+    border-bottom: 1px solid #e3e3e3;
+  }
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Print-friendly */
+@media print {
+  .cv-layout {
+    border: none;
+    margin: 0;
+  }
+  .cv-sidebar {
+    background: #fff;
+    border-right: 1px solid #ccc;
+  }
+  a {
+    color: black;
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,58 @@
+.floating-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  border-radius: 50%;
+  background-color: #b9cde5;
+  border: 1px solid gray;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Desktop button */
+.floating-btn.desktop {
+  width: 140px;
+  height: 140px;
+  font-size: 65px;
+}
+
+/* Mobile button */
+.floating-btn.mobile {
+  width: 60px;
+  height: 60px;
+  font-size: 18px;
+}
+
+/* Chat window base */
+.chat-window {
+  position: fixed;
+  right: 20px;
+  background-color: #f0f2f5;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Desktop chat */
+.chat-window.desktop {
+  bottom: 90px;
+  width: 500px;
+  height: 500px;
+}
+
+/* Mobile chat */
+.chat-window.mobile {
+  bottom: 80px;
+  width: 90%;
+  height: 70vh;
+  max-width: 400px;
+  max-height: 90vh;
+}

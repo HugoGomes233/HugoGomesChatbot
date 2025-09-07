@@ -3,7 +3,7 @@ from ragas import evaluate
 from ragas.llms import LangchainLLMWrapper
 from ragas.metrics import LLMContextRecall, Faithfulness, FactualCorrectness
 from .ragas_dataset import sample_queries, expected_responses
-from bot_core import load_pdf, create_vectorstore, create_qa_chain
+from backend.core.bot_core import load_pdf, create_vectorstore, create_qa_chain
 
 
 dataset = []
