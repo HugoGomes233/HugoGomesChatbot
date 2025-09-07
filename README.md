@@ -1,65 +1,73 @@
- 📄 PDF Q&A Chatbot
+# 📄 PDF Q&A Chatbot
 
+Interactive chatbot that answers questions about any PDF using **Azure OpenAI**, **LangChain**, and **ChromaDB**.  
+The project consists of a **Python backend** (FastAPI + LangChain) and a **React frontend** for chat interaction.
 
-Interactive chatbot that answers questions about any PDF using Azure OpenAI, LangChain, and ChromaDB.
+---
 
-⚡ Features
+## ⚡ Features
 
-Load and process any PDF file.
+- Load and process any PDF file.
+- Split PDF into chunks for efficient retrieval.
+- Generate embeddings using **Azure OpenAI (text-embedding-3-large)**.
+- Store embeddings in **Chroma vector database**.
+- Retrieval-based QA using **AzureChatOpenAI**.
+- Interactive chat UI with React.
+- Typing indicator and smooth chat scrolling.
 
-Split PDF into chunks for efficient retrieval.
+---
 
-Generate embeddings with Azure OpenAI (text-embedding-3-large).
+## 🚀 Installation
 
-Store embeddings in Chroma vector database.
+1. Clone the repository:
+git clone <repo-url>
+cd <repo-folder>
 
-Retrieval-based QA with AzureChatOpenAI.
+Create a Python virtual environment and install dependencies:
+python -m venv venv
+source venv/bin/activate  # Linux / Mac
+venv\Scripts\activate     # Windows
+pip install -r requirements.txt
 
-Streamlit-based interactive chatbot UI.
-
-🚀 Installation
-
-Create a .env file:
-
+Create a .env file with your Azure credentials:
+env
 AZURE_OPENAI_ENDPOINT=<your-azure-endpoint>
 AZURE_OPENAI_API_KEY=<your-azure-api-key>
 AZURE_OPENAI_DEPLOYMENT_NAME=<your-embedding-deployment-name>
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=<your-chat-deployment-name>
 
+Install frontend dependencies:
+cd frontend
+npm install
 💻 Usage
+1. Run Backend
+bash
+Copiar código
+uvicorn main:app --reload
+FastAPI backend exposes /ask endpoint for the chat queries.
 
-Run the Streamlit interface
-streamlit run bot_ui.py
+2. Run Frontend
 
-
-Enter the full path of the PDF.
-
-Ask questions interactively.
-
-Streamlit handles the interface and calls the core QA engine.
-
-2. Run Ragas tests (optional)
-python -m ragas_tests.bot_ragas
+npm start
 
 
-Evaluates the bot against predefined queries in ragas_dataset.py.
 
-Returns metrics or compares answers with expected responses.
+React frontend Hugo CV and you can interact with a chat bot.
+
+Ask questions interactively; the frontend communicates with FastAPI.
 
 🧠 How It Works
+Load PDF → PDF is read and split into chunks.
 
-Load PDF → Splits PDF text into chunks.
+Vector Store → Chunks are converted to embeddings using Azure OpenAI and stored in ChromaDB.
 
-Vector Store → Converts chunks to embeddings and stores them in ChromaDB.
+QA Chain → RetrievalQA with AzureChatOpenAI retrieves relevant chunks and generates answers.
 
-QA Chain → Uses RetrievalQA with AzureChatOpenAI to generate answers.
-
-Chat Loop → Streamlit frontend
+Chat Loop → Frontend displays the conversation and typing indicator in real time.
 
 📌 Notes
-
 PDFs must be text-based (not scanned images).
 
 Adjust chunk_size and chunk_overlap in CharacterTextSplitter for performance tuning.
 
-Retrieval-based answers depend on the stored chunks.
+Retrieval-based answers depend on the stored chunks in ChromaDB.
