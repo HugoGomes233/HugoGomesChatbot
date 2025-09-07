@@ -1,0 +1,18 @@
+# Backend API
+fastapi
+uvicorn[standard]
+
+# LangChain core
+langchain
+langchain-community
+langchain-openai   # ✅ use dash, not underscore
+
+# OpenAI + Azure
+openai
+python-dotenv
+
+# Vector DB
+chromadb
+
+# PDF parsing
+pymupdf
