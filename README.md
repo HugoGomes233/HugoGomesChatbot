@@ -39,17 +39,14 @@ AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=<your-chat-deployment-name>
 Install frontend dependencies:
 cd frontend
 npm install
+
 💻 Usage
 1. Run Backend
-bash
-Copiar código
 uvicorn main:app --reload
 FastAPI backend exposes /ask endpoint for the chat queries.
 
 2. Run Frontend
-
 npm start
-
 
 
 React frontend Hugo CV and you can interact with a chat bot.
