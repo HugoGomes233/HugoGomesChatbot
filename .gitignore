@@ -1,1 +1,11 @@
- 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.env
+
+# Docker files
+Dockerfile
+.dockerignore
