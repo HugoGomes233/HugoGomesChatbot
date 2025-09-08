@@ -1,7 +1,13 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from core.bot_core import load_pdf, create_vectorstore, create_qa_chain
+
+load_dotenv()  # load .env file
+
+FRONTEND_URL = os.getenv("FRONTEND_URL", "*")  # fallback to "*" if not set
 
 # -----------------------------
 # Initialize FastAPI app
@@ -21,7 +27,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # <-- in prod, set to your frontend origin
+    allow_origins=[FRONTEND_URL],  # <-- in prod, set to your frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -43,6 +49,20 @@ qa_chain, _ = create_qa_chain(vectorstore)  # Initialize QA chain (LangChain)
 # Using Pydantic BaseModel ensures validation and type safety.
 class Question(BaseModel):
     query: str  # The user question to be answered by the QA chain
+
+# -----------------------------
+# GET /status endpoint
+# -----------------------------
+@app.get("/status")
+def get_status():
+    """
+    Simple health check endpoint to verify if the bot is online.
+    Returns 'online': true if the API is running.
+    """
+    try:
+        return {"online": True, "message": "Bot is online"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # -----------------------------
 # POST /ask endpoint

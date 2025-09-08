@@ -159,6 +159,7 @@ a { color: #0a66c2; }
   .cv-sidebar {
     border-right: none;
     border-bottom: 1px solid #e3e3e3;
+    height: 100vh;
   }
   .skills-grid {
     grid-template-columns: 1fr;
@@ -174,6 +175,7 @@ a { color: #0a66c2; }
   .cv-sidebar {
     background: #fff;
     border-right: 1px solid #ccc;
+    
   }
   a {
     color: black;

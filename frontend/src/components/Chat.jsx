@@ -1,22 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Chat.css";
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 // -----------------------------
 // Avatar images for user and bot
 // -----------------------------
-const userAvatar = "/no-picture.png"; 
+const userAvatar = "/no-picture.png";
 const botAvatar = "/personal_data_picture.jpg";
 
 // -----------------------------
 // Chat Component
 // -----------------------------
-function Chat({ onClose }) {
+function Chat({ onClose , isBotOnline, initialMessages  }) {
   // -----------------------------
   // State hooks
   // -----------------------------
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hello! How can I assist you today?" }, // initial message
-  ]);
+  const [messages, setMessages] = useState(initialMessages); // Chat messages
   const [input, setInput] = useState("");       // Text input value
   const [loading, setLoading] = useState(false); // Loading state for async request
   const [isTyping, setIsTyping] = useState(false); // Typing indicator for bot
@@ -50,7 +50,7 @@ function Chat({ onClose }) {
 
     try {
       // Send query to backend API
-      const res = await fetch("http://localhost:8000/ask", {
+      const res = await fetch(`${BACKEND_URL}/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: input }),
@@ -66,7 +66,7 @@ function Chat({ onClose }) {
       // Handle API errors gracefully
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "Error contacting backend." },
+        { sender: "bot", text: "I couldnt reach my backend, please try again or contact administrator " },
       ]);
     }
 
@@ -94,7 +94,10 @@ function Chat({ onClose }) {
       <div className="chat-header">
         <img src={botAvatar} alt="bot" className="chat-avatar" />
         <span className="chat-name">Hugo Gomes</span>
-        <span className="chat-status">● Online</span>
+        <span className={`chat-status ${isBotOnline ? "chat-online" : "chat-offline"}`}>
+          ● {isBotOnline ? "Online" : "Offline"}
+        </span>
+
         {/* Close button */}
         <button className="chat-close-btn" onClick={onClose}>✖</button>
       </div>
@@ -104,9 +107,8 @@ function Chat({ onClose }) {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`chat-message-row ${
-              msg.sender === "user" ? "user" : "bot"
-            }`}
+            className={`chat-message-row ${msg.sender === "user" ? "user" : "bot"
+              }`}
           >
             {/* Avatar on the left for bot */}
             {msg.sender === "bot" && (
@@ -115,9 +117,8 @@ function Chat({ onClose }) {
 
             {/* Message bubble */}
             <div
-              className={`chat-bubble ${
-                msg.sender === "user" ? "user" : "bot"
-              }`}
+              className={`chat-bubble ${msg.sender === "user" ? "user" : "bot"
+                }`}
             >
               {msg.text}
             </div>
@@ -140,15 +141,18 @@ function Chat({ onClose }) {
       <div className="chat-input-area">
         <textarea
           rows="2"
-          placeholder="Type a message..."
+          placeholder={
+            isBotOnline ? "Type a message..." : "Bot is offline, please wait..."
+          }
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}
           className="chat-input"
+          disabled={!isBotOnline || loading}   // ⬅️ disable textarea
         />
         <button
           onClick={handleSend}
-          disabled={loading}
+          disabled={!isBotOnline || loading}   // ⬅️ disable button
           className="chat-send-btn"
         >
           Send

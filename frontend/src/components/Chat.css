@@ -30,7 +30,15 @@
 
 .chat-status {
   margin-left: 10px;
+  font-weight: bold;
+}
+
+.chat-online {
   color: green;
+}
+
+.chat-offline {
+  color: red;
 }
 
 .chat-close-btn {
