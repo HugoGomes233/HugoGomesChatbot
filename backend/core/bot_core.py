@@ -6,6 +6,12 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
+
+#NEW
+import google.generativeai as genai
+from langchain_google_genai import GoogleGenerativeAIEmbeddings,ChatGoogleGenerativeAI
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
 from datetime import datetime
 
 # -----------------------------
@@ -65,12 +71,10 @@ def create_vectorstore(docs):
     Returns:
         Chroma: Vectorstore containing embedded documents for retrieval.
     """
-    embeddings = AzureOpenAIEmbeddings(
-        azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),  # Azure Deployment
-        model="text-embedding-3-large",                              # Embedding model
-        api_key=os.getenv("AZURE_OPENAI_API_KEY"),                   # Azure API key
-        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),           # Azure endpoint
-        api_version="2024-12-01-preview"                             # Azure API version
+    
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model=os.getenv("GEMINI_EMBEDDING_MODEL"), # Gemini embedding model
+        google_api_key=os.getenv("GEMINI_API_KEY") # Your Gemini API key
     )
 
     # Create and return the Chroma vectorstore
@@ -82,7 +86,7 @@ def create_vectorstore(docs):
 # Sets up the retrieval-based QA system using the vectorstore and LLM
 def create_qa_chain(vectorstore):
     """
-    Creates a RetrievalQA chain using the vectorstore and Azure Chat LLM.
+    Creates a RetrievalQA chain using the vectorstore and Gemini Chat LLM.
 
     Args:
         vectorstore (Chroma): Precomputed vectorstore of embedded documents.
@@ -94,14 +98,11 @@ def create_qa_chain(vectorstore):
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
     # Initialize Azure Chat LLM for generating responses
-    llm = AzureChatOpenAI(
-        deployment_name=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),  # Azure Deployment
-        model="gpt-4o",                                                  # Model name
-        temperature=0,                                                   # Deterministic responses
-        api_key=os.getenv("AZURE_OPENAI_API_KEY"),                       # Azure API key
-        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),               # Azure endpoint
-        api_version="2024-12-01-preview"                                 # Azure API version
-    )
+    llm = ChatGoogleGenerativeAI(
+    model=os.getenv("GEMINI_CHAT_MODEL"),      # Modelo de LLM (podes usar gemini-1.5-flash se quiseres algo mais rápido e gratuito)
+    temperature=0,                             # Deterministic responses
+    google_api_key=os.getenv("GOOGLE_API_KEY") # Gemini API key
+)
 
     # -----------------------------
     # Custom prompt template

@@ -22,6 +22,7 @@ function FloatingButton() {
   useEffect(() => {
     const checkStatus = async () => {
       try {
+        console.log(`${BACKEND_URL}/status`)
         // Send GET request to check if bot is online
         const res = await fetch(`${BACKEND_URL}/status`, {
           method: "GET",

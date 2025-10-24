@@ -17,7 +17,6 @@ export default function Curriculum() {
           <h2>Personal Data</h2>
           <ul className="personal-data">
             <li><span>Full Name:</span><span>Hugo dos Santos Gomes</span></li>
-            <li><span>Phone:</span><span>+351 925 733 753</span></li>
             <li><span>Address:</span><span>Figueira da Foz, Portugal</span></li>
             <li><span>Email:</span><span><a href="mailto:hugomes1999@gmail.com">hugomes1999@gmail.com</a></span></li>
             <li><span>Date of Birth:</span><span>09-09-1999</span></li>
@@ -65,19 +64,21 @@ export default function Curriculum() {
         <section>
           <h2>About Me</h2>
           <p>
-
-            Passionate Developer with 3 years of experience turning ideas into functional applications. I began my career
-            with OutSystems, where I built a solid foundation in software development, working in subcontracting projects
-            with Deloitte and Noesis. Today, my growing passion for Generative AI is driving my career pivot. Skilled in
-            problem-solving, collaboration, and adapting to new technologies, I am eager to apply my technical background
-            and curiosity to build innovative AI-driven solutions and continue expanding my expertise in this fast-evolving
-            field.
+            Passionate Developer with 3 years of experience turning ideas into functional applications. I began my career with OutSystems, building a solid foundation in software development through various client projects. Today, my growing passion for Generative AI is driving my career pivot. Skilled in problem-solving, collaboration, and adapting to new technologies, I am eager to apply my technical background and curiosity to build innovative AI-driven solutions and continue expanding my expertise in this fast-evolving field.
           </p>
         </section>
 
         {/* Professional Experience */}
         <section>
           <h2>Professional Experience</h2>
+          <div className="job">
+            <div className="job-head">
+              <h3>AI & Data Programmer </h3>
+              <span className="date">Deloitte Portugal (Oct 2025 – Present )</span>
+            </div>
+          </div>
+
+          <hr style={{ border: "1px solid #ccc", margin: "20px 0" }} />
 
           <div className="job">
             <div className="job-head">
